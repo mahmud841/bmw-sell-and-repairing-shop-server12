@@ -29,7 +29,85 @@ client.connect(err => {
                 res.send(documents)
             })
     })
- 
+    app.delete('/delete/:id', (req, res) => {
+        serviceCollection.findOneAndDelete({ _id: ObjectId(req.params.id) })
+            .then(response => {
+                res.send(response.ok > 0);
+            })
+    })
+    app.get('/service/:title', (req, res) => {
+        serviceCollection.find({ title: req.params.title })
+            .toArray((error, documents) => {
+                res.send(documents)
+            })
+    })
+    // add admin api
+    const adminCollection = client.db("cars_portal").collection("admin");
+    app.post('/addAdmin', (req, res) => {
+        adminCollection.insertOne(req.body)
+            .then(result => {
+                res.send(result.insertedCount > 0)
+            })
+    })
+    // find admin or not
+    app.post('/admin', (req, res) => {
+        const email = req.body.email
+        adminCollection.find({ email: email })
+            .toArray((err, data) => {
+                res.send(data.length > 0)
+            })
+    })
+    // order api
+    const orderCollection = client.db("cars_portal").collection("orders");
+    // add new order
+    app.post('/addOrder', (req, res) => {
+        orderCollection.insertOne(req.body)
+            .then(result => {
+                res.send(result.insertedCount > 0)
+            })
+    })
+    // all orders
+    app.get('/allOrders', (req, res) => {
+        orderCollection.find({})
+            .toArray((error, documents) => {
+                res.send(documents)
+            })
+    })
+    // individual orders
+    app.post('/orders', (req, res) => {
+        const email = req.body.email
+        orderCollection.find({ email: email })
+            .toArray((error, documents) => {
+                res.send(documents)
+            })
+    })
+    //update order status 
+    app.patch('/update/:id', (req, res) => {
+        const toUpdate = req.body;
+        orderCollection.updateOne({ _id: ObjectId(req.params.id) },
+            { $set: toUpdate, $currentDate: { lastModified: true } })
+            .then(result => {
+                res.send(result.modifiedCount > 0)
+            })
+            .catch(err => {
+                console.log('Failed to update');
+            })
+    })
+    // review api
+    const reviewCollection = client.db("cars_portal").collection("reviews");
+    app.post('/addReview', (req, res) => {
+        reviewCollection.insertOne(req.body)
+            .then(result => {
+                res.send(result.insertedCount > 0)
+            })
+    })
+    app.get('/reviews', (req, res) => {
+        reviewCollection.find({})
+            .toArray((error, documents) => {
+                res.send(documents)
+            })
+    })
+});
 
 const port = 5000;
 app.listen(process.env.PORT || port, () => {
