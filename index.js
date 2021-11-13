@@ -1,3 +1,5 @@
+//************ Server Side Coding ******************/
+//************************************************ */
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
@@ -15,7 +17,7 @@ app.use(cors());
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 client.connect(err => {
 
-    // service api
+    //*************service api created*************
     const serviceCollection = client.db("cars_portal").collection("services");
     app.post('/addService', (req, res) => {
         serviceCollection.insertOne(req.body)
@@ -29,6 +31,8 @@ client.connect(err => {
                 res.send(documents)
             })
     })
+
+    //**************Delete Option Creation************** */
     app.delete('/delete/:id', (req, res) => {
         serviceCollection.findOneAndDelete({ _id: ObjectId(req.params.id) })
             .then(response => {
@@ -41,7 +45,7 @@ client.connect(err => {
                 res.send(documents)
             })
     })
-    // add admin api
+    //****************add asmin part creation******************
     const adminCollection = client.db("cars_portal").collection("admin");
     app.post('/addAdmin', (req, res) => {
         adminCollection.insertOne(req.body)
@@ -49,7 +53,7 @@ client.connect(err => {
                 res.send(result.insertedCount > 0)
             })
     })
-    // find admin or not
+    //**************find the admin, right or wrong********************
     app.post('/admin', (req, res) => {
         const email = req.body.email
         adminCollection.find({ email: email })
@@ -57,23 +61,23 @@ client.connect(err => {
                 res.send(data.length > 0)
             })
     })
-    // order api
+    //********************order created*********************
     const orderCollection = client.db("cars_portal").collection("orders");
-    // add new order
+    //*******add new order*************
     app.post('/addOrder', (req, res) => {
         orderCollection.insertOne(req.body)
             .then(result => {
                 res.send(result.insertedCount > 0)
             })
     })
-    // all orders
+    //*****************All orders backend part ***********************
     app.get('/allOrders', (req, res) => {
         orderCollection.find({})
             .toArray((error, documents) => {
                 res.send(documents)
             })
     })
-    // individual orders
+    //****************individual orders part**************
     app.post('/orders', (req, res) => {
         const email = req.body.email
         orderCollection.find({ email: email })
@@ -81,7 +85,7 @@ client.connect(err => {
                 res.send(documents)
             })
     })
-    //update order status 
+    //***********Update order ************* 
     app.patch('/update/:id', (req, res) => {
         const toUpdate = req.body;
         orderCollection.updateOne({ _id: ObjectId(req.params.id) },
@@ -90,10 +94,10 @@ client.connect(err => {
                 res.send(result.modifiedCount > 0)
             })
             .catch(err => {
-                console.log('Failed to update');
+                console.log('Failed to update order');
             })
     })
-    // review api
+    //*******************Review Order*************
     const reviewCollection = client.db("cars_portal").collection("reviews");
     app.post('/addReview', (req, res) => {
         reviewCollection.insertOne(req.body)
@@ -108,7 +112,7 @@ client.connect(err => {
             })
     })
 });
-
+// **********************Port Connection*******************
 const port = 5000;
 app.listen(process.env.PORT || port, () => {
     console.log(`Listening app at http://localhost:${port}`)

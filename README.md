@@ -2,12 +2,13 @@
   Welcome to the My Website.This is BMW car sell and repairing shop.Our main goal is to satisfy the customer.
 <br/>
 <br/>
+<br/>
 
 
 ### My Website  Features:
-- Responsive Full Stack app with firebase and admin authentication, dashboard functionality for admin and customer.
-- Any Customer can book service, check status, and able to give their feedback.
-- Only Admin can add or remove services, add new admin, and also change order status.
+- Responsive Full Stack Website with firebase and admin authentication, have dashboard functionality for admin and customer.
+- Any Customer can book service, check status, and able to give their feedback very easily.
+- Only Admin can add or remove services, add new admin, and also change order status figure.
 
 ### Technology Used in My Website:
 - React js
